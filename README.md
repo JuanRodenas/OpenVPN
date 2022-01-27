@@ -1,5 +1,7 @@
 # OpenVPN
-Proyecto para crear una vpn en Wireguard en Docker.
+Proyecto para crear una vpn OpenVPN en ubuntu.
+
+
 
 <div class="content-body tutorial-content" data-growable-markdown>
   
