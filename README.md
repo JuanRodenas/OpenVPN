@@ -80,7 +80,7 @@ Your newly created PKI dir is: /home/jrodenas/easy-rsa/pki
 </li><li class="line" data-prefix="$">nano vars
 </li></ul></code></pre>
 <p>Una vez que se abra el archivo, pegue las siguientes líneas y sustituya cada valor resaltado por la información de su propia organización. Lo importante aquí es asegurarse de no dejar ninguno de los valores en blanco:</p>
-<pre class="code-pre "><code><div class="secondary-code-label " title="~/easy-rsa/vars">~/easy-rsa/vars</div>set_var EASYRSA_REQ_COUNTRY    "<span class="highlight">US</span>"
+<pre class="code-pre "><code><div class="secondary-code-label " title="/home/jrodenas/easy-rsa/vars">/home/jrodenas/easy-rsa/vars</div>set_var EASYRSA_REQ_COUNTRY    "<span class="highlight">US</span>"
 set_var EASYRSA_REQ_PROVINCE   "<span class="highlight">NewYork</span>"
 set_var EASYRSA_REQ_CITY       "<span class="highlight">New York City</span>"
 set_var EASYRSA_REQ_ORG        "<span class="highlight">Organization</span>"
@@ -113,7 +113,7 @@ Your new CA certificate file for publishing is at:
 </li></ul></code></pre>
 <p></p></span>
 
-<p>Ahora, tiene dos archivos importantes, <code>~/easy-rsa/pki/ca.crt</code> y <code>~/easy-rsa/pki/private/ca.key</code>, que conforman los componentes públicos y privados de una entidad de certificación.</p>
+<p>Ahora, tiene dos archivos importantes, <code>/home/jrodenas/easy-rsa/pki/ca.crt</code> y <code>/home/jrodenas/easy-rsa/pki/private/ca.key</code>, que conforman los componentes públicos y privados de una entidad de certificación.</p>
 
 <ul>
 <li><p><code>ca.crt</code> es el archivo del certificado público de la CA. Los usuarios, los servidores y los clientes utilizarán este certificado para verificar que sean parte de la misma red de confianza. Todos los usuarios y los servidores que usen su CA deberán tener una copia de este archivo. Todas las partes se basarán en el certificado público para asegurarse de que nadie suplante un sistema y realice un <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">ataque con intermediario</a>.</p></li>
@@ -184,10 +184,10 @@ BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjAwMzE4MDMxNjI2WhcNMzAw
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo apt update
 </li><li class="line" data-prefix="$">sudo apt install openvpn easy-rsa
 </li></ul></code></pre>
-<p>A continuación, deberá crear un directorio nuevo en el servidor de OpenVPN como su non-root user llamado <code>~/easy-rsa</code>:</p>
+<p>A continuación, deberá crear un directorio nuevo en el servidor de OpenVPN como su non-root user llamado <code>/home/jrodenas/easy-rsa</code>:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir /home/jrodenas/easy-rsa
 </li></ul></code></pre>
-<p>Ahora, deberá crear un symlink desde la secuencia de comandos de <code>easyrsa</code> que el paquete instaló en el directorio <code>~/easy-rsa</code> que acaba de crear:</p>
+<p>Ahora, deberá crear un symlink desde la secuencia de comandos de <code>easyrsa</code> que el paquete instaló en el directorio <code>/home/jrodenas/easy-rsa</code> que acaba de crear:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ln -s /usr/share/easy-rsa/* /home/jrodenas/easy-rsa/
 </li></ul></code></pre>
 <p><span class='note'><strong>Nota:</strong> Aunque otras guías le indiquen que copie los archivos del paquete <code>easy-rsa</code> a su directorio de la PKI, en este tutorial, usaremos enlaces simbólicos. Como resultado, toda actualización del paquete <code>easy-rsa</code> se reflejará automáticamente en las secuencias de comandos de su PKI.<br></span></p>
@@ -207,7 +207,7 @@ BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjAwMzE4MDMxNjI2WhcNMzAw
 </li><li class="line" data-prefix="$">nano vars
 </li></ul></code></pre>
 <p>Una vez abierto el archivo, pegue las siguientes dos líneas:</p>
-<div class="code-label " title="~/easy-rsa/vars">~/easy-rsa/vars</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">set_var EASYRSA_ALGO "ec"
+<div class="code-label " title="/home/jrodenas/easy-rsa/vars">/home/jrodenas/easy-rsa/vars</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">set_var EASYRSA_ALGO "ec"
 set_var EASYRSA_DIGEST "sha512"
 </code></pre>
 <p>Estas son las únicas dos líneas que necesita en este archivo <code>vars</code> en su servidor OpenVPN ya que no se usará como Autoridad de certificación. Estas líneas garantizarán que sus claves y solicitudes de certificado privadas estén configurados para utilizar la Elliptic Curve Cryptography (ECC) moderna para generar claves y firmas seguras para sus clientes y su servidor de OpenVPN.</p>
@@ -230,7 +230,7 @@ set_var EASYRSA_DIGEST "sha512"
 
 <p>Ahora que su servidor de OpenVPN tiene todos los requisitos previos instalados, el siguiente paso es generar una clave privada y una solicitud de firma de certificados (CSR) en su servidor de OpenVPN. A continuación, transferirá la solicitud a su CA para que se firme, lo que creará el certificado requerido. Cuando tenga un certificado firmado, lo transferirá de vuelta al servidor de OpenVPN y lo instalará para que el servidor lo use.</p>
 
-<p>Para comenzar, diríjase al directorio <code>~/easy-rsa</code> de su servidor de OpenVPN como su non-root user:</p>
+<p>Para comenzar, diríjase al directorio <code>/home/jrodenas/easy-rsa</code> de su servidor de OpenVPN como su non-root user:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
 </li></ul></code></pre>
 <p>Invoque <code>easyrsa</code> con la opción <code>gen-req</code> seguida de un nombre común (CN) para la máquina. El CN puede ser el que prefiera, pero puede resultarle útil que sea descriptivo. Durante este tutorial, el CN del servidor de OpenVPN será <code>server</code>. Asegúrese de incluir también la opción <code>nopass</code>. Si no lo hace, se protegerá con contraseña el archivo de solicitud, lo que puede generar problemas de permisos más adelante.</p>
@@ -255,7 +255,7 @@ key: /home/jrodenas/easy-rsa/pki/private/server.key
 <p>En el servidor de OpenVPN, como su non-root user, use SCP u otro método de transferencia para copiar la solicitud de certificado <code>server.req</code> al servidor CA para firmar lo siguiente:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp /home/jrodenas/easy-rsa/pki/reqs/server.req <span class="highlight">jrodenas</span>@<span class="highlight">your_ca_server_ip</span>:/tmp
 </li></ul></code></pre>
-<p>Si siguió el tutorial <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-and-configure-a-certificate-authority-ca-on-ubuntu-20-04">Cómo instalar y configurar una entidad de certificación (CA) en Ubuntu 20.04</a> de los requisitos previos, el siguiente paso será iniciar sesión en el <strong>servidor de CA</strong> como el non-root user que creó para administrar su CA. Utilice <code>cd</code> para el directorio <code>~/easy-rsa</code> donde creó su PK y luego importe la solicitud de certificado utilizando la secuencia de comandos <code>easyrsa</code>:</p>
+<p>Si siguió el tutorial <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-and-configure-a-certificate-authority-ca-on-ubuntu-20-04">Cómo instalar y configurar una entidad de certificación (CA) en Ubuntu 20.04</a> de los requisitos previos, el siguiente paso será iniciar sesión en el <strong>servidor de CA</strong> como el non-root user que creó para administrar su CA. Utilice <code>cd</code> para el directorio <code>/home/jrodenas/easy-rsa</code> donde creó su PK y luego importe la solicitud de certificado utilizando la secuencia de comandos <code>easyrsa</code>:</p>
 <pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
 </li><li class="line" data-prefix="$">./easyrsa import-req /tmp/server.req server
 </li></ul></code></pre><pre class="code-pre  third-environment"><code><div class="secondary-code-label " title="Output">Output</div>. . .
@@ -301,7 +301,7 @@ Certificate created at: /home/jrodenas/easy-rsa/pki/issued/server.crt
 
 <p>Esta opción lo ayudará a asegurarse de que su servidor de OpenVPN pueda hacer frente al tráfico sin autenticación, a los escáneres de puerto y a los ataques de denegación de servicio, que pueden restringir recursos del servidor. También hace que sea más difícil identificar el tráfico de red de OpenVPN.</p>
 
-<p>Para generar la clave <code>tls-crypt</code> antes compartida, ejecute lo siguiente en el servidor de OpenVPN en el directorio <code>~/easy-rsa</code>:</p>
+<p>Para generar la clave <code>tls-crypt</code> antes compartida, ejecute lo siguiente en el servidor de OpenVPN en el directorio <code>/home/jrodenas/easy-rsa</code>:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
 </li><li class="line" data-prefix="$">openvpn --genkey --secret ta.key
 </li></ul></code></pre>
@@ -326,7 +326,7 @@ Certificate created at: /home/jrodenas/easy-rsa/pki/issued/server.crt
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
 </li><li class="line" data-prefix="$">./easyrsa gen-req <span class="highlight">client1</span> nopass
 </li></ul></code></pre>
-<p>Presione <code>ENTER</code> para confirmar el nombre común. Luego, copie el archivo <code>client1.key</code> al directorio <code>~/client-configs/keys/</code> que creó antes:</p>
+<p>Presione <code>ENTER</code> para confirmar el nombre común. Luego, copie el archivo <code>client1.key</code> al directorio <code>/home/jrodenas/client-configs/keys/</code> que creó antes:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp pki/private/client1.key /home/jrodenas/client-configs/keys/
 </li></ul></code></pre>
 <p>Luego, transfiera el archivo <code>client1.req</code> a su servidor de CA usando un método seguro:</p>
@@ -348,10 +348,10 @@ Confirm request details: <span class="highlight">yes</span>
 <p>Con esto, se creará un archivo de certificado de cliente llamado <code>client1.crt</code>. Transfiera este archivo de vuelta al servidor:</p>
 <pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp pki/issued/client1.crt <span class="highlight">jrodenas</span>@<span class="highlight">your_server_ip</span>:/tmp
 </li></ul></code></pre>
-<p>Vuelva a su servidor de OpenVPN, copie el certificado del cliente al directorio <code>~/client-configs/keys/</code>:</p>
+<p>Vuelva a su servidor de OpenVPN, copie el certificado del cliente al directorio <code>/home/jrodenas/client-configs/keys/</code>:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /tmp/client1.crt /home/jrodenas/client-configs/keys/
 </li></ul></code></pre>
-<p>Luego copie los archivos <code>ca.crt</code> y <code>ta.key</code> al directorio <code>~/client-configs/keys/</code> también y establezca los permisos correspondientes para su usuario sudo:</p>
+<p>Luego copie los archivos <code>ca.crt</code> y <code>ta.key</code> al directorio <code>/home/jrodenas/client-configs/keys/</code> también y establezca los permisos correspondientes para su usuario sudo:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /home/jrodenas/easy-rsa/ta.key /home/jrodenas/client-configs/keys/
 </li><li class="line" data-prefix="$">sudo cp /etc/openvpn/server/ca.crt /home/jrodenas/client-configs/keys/
 </li><li class="line" data-prefix="$">sudo chown <span class="highlight">jrodenas</span>.<span class="highlight">jrodenas</span> /home/jrodenas/client-configs/keys/*
@@ -557,7 +557,7 @@ Apr 29 15:39:59 ubuntu-20 openvpn[16872]: Initialization Sequence Completed
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/jrodenas/client-configs/base.conf
 </li></ul></code></pre>
 <p>Dentro de este, ubique la directiva <code>remote</code>. Esto dirige al cliente a la dirección de su servidor de OpenVPN: la dirección IP pública de su servidor de OpenVPN. Si decidió cambiar el puerto en el que el servidor de OpenVPN escucha, también deberá cambiar <code>1194</code> por el puerto seleccionado:</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">. . .
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">. . .
 # The hostname/IP and port of the server.
 # You can have multiple remote entries
 # to load balance between the servers.
@@ -565,15 +565,15 @@ remote <span class="highlight">your_server_ip</span> <span class="highlight">119
 . . .
 </code></pre>
 <p>Asegúrese de que el protocolo coincida con el valor que usa en la configuración del servidor:</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">proto <span class="highlight">udp</span>
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">proto <span class="highlight">udp</span>
 </code></pre>
 <p>Luego, elimine los comentarios de las directivas <code>user</code> y <code>group</code> quitando el signo <code>;</code> al inicio de cada línea:</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># Downgrade privileges after initialization (non-Windows only)
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># Downgrade privileges after initialization (non-Windows only)
 user nobody
 group nogroup
 </code></pre>
 <p>Encuentre las directivas que establecen <code>ca</code>, <code>cert</code> y <code>key</code>. Elimine los comentarios de estas directivas, ya que pronto agregará los certificados y las claves dentro del archivo:</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># SSL/TLS parms.
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># SSL/TLS parms.
 # See the server config file for more
 # description. It's best to use
 # a separate .crt/.key file pair
@@ -584,24 +584,24 @@ group nogroup
 <span class="highlight">;</span>key client.key
 </code></pre>
 <p>De modo similar, elimine la directiva <code>tls-auth</code>, ya que añadirá <code>ta.key</code> directamente al archivo de configuración del cliente (y se configura el servidor para que use <code>tls-crypt</code>):</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># If a tls-auth key is used on the server
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># If a tls-auth key is used on the server
 # then every client must also have the key.
 <span class="highlight">;</span>tls-auth ta.key 1
 </code></pre>
 <p>Refleje los ajustes de <code>cipher</code> y <code>auth</code> establecidos en el archivo <code>/etc/openvpn/server/server.conf</code>:</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">cipher AES-256-GCM</span>
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">cipher AES-256-GCM</span>
 <span class="highlight">auth SHA256</span>
 </code></pre>
 <p>Luego, agregue la directiva <code>key-direction</code> en algún lugar del archivo. Es <strong>necesario que</strong> fije el valor &ldquo;1&rdquo; para esta, a fin de que la VPN funcione de manera correcta en la máquina cliente:</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">key-direction 1</span>
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">key-direction 1</span>
 </code></pre>
 <p>Por último, añada algunas líneas con <strong>comentarios eliminados</strong> para administrar varios métodos que los clientes VPN basados ​​en Linux utilizarán para la resolución DNS. Añadirá dos conjuntos de líneas con comentarios eliminados similares, pero separados. El primer conjunto es para los clientes que <em>no</em> utilizan <code>systemd-resolved</code> para administrar DNS. Estos clientes dependen de la utilidad <code>resolvconf</code> para actualizar la información DNS para clientes de Linux.</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
 <span class="highlight">; up /etc/openvpn/update-resolv-conf</span>
 <span class="highlight">; down /etc/openvpn/update-resolv-conf</span>
 </code></pre>
 <p>Luego, añada otro conjunto de líneas para clientes que utilicen <code>systemd-resolved</code> para la resolución de DNS:</p>
-<div class="code-label " title="~/client-configs/base.conf">~/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
+<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
 <span class="highlight">; up /etc/openvpn/update-systemd-resolved</span>
 <span class="highlight">; down /etc/openvpn/update-systemd-resolved</span>
 <span class="highlight">; down-pre</span>
@@ -611,17 +611,17 @@ group nogroup
 
 <p>Más adelante, en el <a href="#step-13-%E2%80%94-installing-the-client-configuration">Paso 13: paso para Instalar la configuración del cliente</a> de este tutorial, aprenderá a determinar cómo funciona la resolución DNS para los clientes Linux y qué sección no debería tener comentarios.</p>
 
-<p>A continuación, cree una secuencia de comandos que compile su configuración de base con el certificado, la clave y los archivos de cifrado pertinentes, y, luego, ubique la configuración generada en el directorio <code>~/client-configs/files</code>. Abra un nuevo archivo llamado <code>make_config.sh</code> en el directorio <code>~/client-configs</code>:</p>
+<p>A continuación, cree una secuencia de comandos que compile su configuración de base con el certificado, la clave y los archivos de cifrado pertinentes, y, luego, ubique la configuración generada en el directorio <code>/home/jrodenas/client-configs/files</code>. Abra un nuevo archivo llamado <code>make_config.sh</code> en el directorio <code>/home/jrodenas/client-configs</code>:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/jrodenas/client-configs/make_config.sh
 </li></ul></code></pre>
 <p>Dentro de este, agregue el siguiente contenido:</p>
-<div class="code-label " title="~/client-configs/make_config.sh">`~/client-configs/make_config.sh`</div><pre class="code-pre sh second-environment"><code class="code-highlight language-bash">#!/bin/bash
+<div class="code-label " title="/home/jrodenas/client-configs/make_config.sh">`/home/jrodenas/client-configs/make_config.sh`</div><pre class="code-pre sh second-environment"><code class="code-highlight language-bash">#!/bin/bash
 
 # First argument: Client identifier
 
-KEY_DIR=~/client-configs/keys
-OUTPUT_DIR=~/client-configs/files
-BASE_CONFIG=~/client-configs/base.conf
+KEY_DIR=/home/jrodenas/client-configs/keys
+OUTPUT_DIR=/home/jrodenas/client-configs/files
+BASE_CONFIG=/home/jrodenas/client-configs/base.conf
 
 cat ${BASE_CONFIG} \
     &lt;(echo -e '&lt;ca&gt;') \
@@ -646,11 +646,11 @@ cat ${BASE_CONFIG} \
 
 <h2 id="paso-12-generar-las-configuraciones-de-clientes">Paso 12: Generar las configuraciones de clientes</h2>
 
-<p>Si siguió la guía, creó un certificado y una clave de cliente llamados <code>client1.crt</code> y <code>client1.key</code>, respectivamente, en el paso 6. Puede generar un archivo de configuración para estas credenciales si se dirige al directorio <code>~/client-configs</code> y ejecuta la secuencia de comandos que realizó al final del paso anterior:</p>
+<p>Si siguió la guía, creó un certificado y una clave de cliente llamados <code>client1.crt</code> y <code>client1.key</code>, respectivamente, en el paso 6. Puede generar un archivo de configuración para estas credenciales si se dirige al directorio <code>/home/jrodenas/client-configs</code> y ejecuta la secuencia de comandos que realizó al final del paso anterior:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/client-configs
 </li><li class="line" data-prefix="$">./make_config.sh <span class="highlight">client1</span>
 </li></ul></code></pre>
-<p>Con esto, se creará un archivo llamado <code>client1.ovpn</code> en su directorio <code>~/client-configs/files</code>:</p>
+<p>Con esto, se creará un archivo llamado <code>client1.ovpn</code> en su directorio <code>/home/jrodenas/client-configs/files</code>:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ls /home/jrodenas/client-configs/files
 </li></ul></code></pre><pre class="code-pre  second-environment"><code><div class="secondary-code-label " title="Output">Output</div>client1.ovpn
 </code></pre>
@@ -659,7 +659,7 @@ cat ${BASE_CONFIG} \
 <p>Si bien las aplicaciones exactas empleadas para lograr esta transferencia dependerán del sistema operativo de su dispositivo y sus preferencias personales, un método seguro y confiable consiste en usar el protocolo de transferencia de archivos SSH (SFTP ) o la copia segura (SCP) en el backend. Con esto, se transportarán los archivos de autenticación de VPN de su cliente a través de una conexión cifrada.</p>
 
 <p>Aquí tiene un comando SFTP de ejemplo que puede ejecutar desde su computadora local (macOS o Linux). Esto copiará el archivo <code><span class="highlight">client1.ovpn</span></code> que hemos creado en el último paso a su directorio de inicio:</p>
-<pre class="code-pre custom_prefix prefixed local-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="local$">sftp <span class="highlight">jrodenas</span>@<span class="highlight">openvpn_server_ip</span>:client-configs/files/client1.ovpn ~/
+<pre class="code-pre custom_prefix prefixed local-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="local$">sftp <span class="highlight">jrodenas</span>@<span class="highlight">openvpn_server_ip</span>:client-configs/files/client1.ovpn /home/jrodenas/
 </li></ul></code></pre>
 <p>A continuación, se muestran diferentes herramientas y tutoriales para transferir de manera segura los archivos del servidor de OpenVPN a una computadora local:</p>
 
@@ -805,7 +805,6 @@ down /etc/openvpn/update-resolv-conf
 <p>Ahora inicie la aplicación OpenVPN en el iPhone. Recibirá una notificación de que un nuevo perfil está listo para importarse. Toque el símbolo verde del signo de suma para importarlo.</p>
 
 <p><img src="https://assets.digitalocean.com/articles/openvpn_ubunutu/2.png" alt="La app OpenVPN de iOS muestra un nuevo perfil listo para importarse">
-<strong>Connecting</strong> (Conectando)</p>
 
 <p>De esta manera, OpenVPN estará listo para usarse con el nuevo perfil. Inicie la conexión deslizando el botón <strong>Connect</strong> (Conectar) a la posición <strong>On</strong> (Activado). Finalice la conexión deslizando el mismo botón a la posición <strong>Off</strong> (Desactivado).</p>
 
@@ -833,8 +832,8 @@ down /etc/openvpn/update-resolv-conf
 
 <p><img src="https://assets.digitalocean.com/articles/openvpn_android/04-profile_added.jpg" alt="La aplicación de Android de OpenVPN con un nuevo perfil añadido"></p>
 
-<p>Para conectarse, haga clic en el botón de activar para el perfil que desea usar. Verá datos en tiempo real de su conexión y tráfico enrutados a través de su servidor de OpenVPN:
-<img src="https://assets.digitalocean.com/articles/openvpn_android/05-connected.jpg" alt="la aplicación de Android de OpenVPN conectada a la VPN"></p>
+<p>Para conectarse, haga clic en el botón de activar para el perfil que desea usar. Verá datos en tiempo real de su conexión y tráfico enrutados a través de su servidor de OpenVPN:</p>
+<p><img src="https://assets.digitalocean.com/articles/openvpn_android/05-connected.jpg" alt="la aplicación de Android de OpenVPN conectada a la VPN"></p>
 
 <p>Para desconectarse, solo haga clic en el botón de alternancia en la parte superior izquierda de nuevo. Se le solicitará que confirme que desea desconectarse de su VPN.</p>
 
