@@ -557,7 +557,7 @@ Apr 29 15:39:59 ubuntu-20 openvpn[16872]: Initialization Sequence Completed
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/jrodenas/client-configs/base.conf
 </li></ul></code></pre>
 <p>Dentro de este, ubique la directiva <code>remote</code>. Esto dirige al cliente a la dirección de su servidor de OpenVPN: la dirección IP pública de su servidor de OpenVPN. Si decidió cambiar el puerto en el que el servidor de OpenVPN escucha, también deberá cambiar <code>1194</code> por el puerto seleccionado:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">. . .
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash">. . .
 # The hostname/IP and port of the server.
 # You can have multiple remote entries
 # to load balance between the servers.
@@ -565,15 +565,15 @@ remote <span class="highlight">your_server_ip</span> <span class="highlight">119
 . . .
 </code></pre>
 <p>Asegúrese de que el protocolo coincida con el valor que usa en la configuración del servidor:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">proto <span class="highlight">udp</span>
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash">proto <span class="highlight">udp</span>
 </code></pre>
 <p>Luego, elimine los comentarios de las directivas <code>user</code> y <code>group</code> quitando el signo <code>;</code> al inicio de cada línea:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># Downgrade privileges after initialization (non-Windows only)
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash"># Downgrade privileges after initialization (non-Windows only)
 user nobody
 group nogroup
 </code></pre>
 <p>Encuentre las directivas que establecen <code>ca</code>, <code>cert</code> y <code>key</code>. Elimine los comentarios de estas directivas, ya que pronto agregará los certificados y las claves dentro del archivo:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># SSL/TLS parms.
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash"># SSL/TLS parms.
 # See the server config file for more
 # description. It's best to use
 # a separate .crt/.key file pair
@@ -584,24 +584,24 @@ group nogroup
 <span class="highlight">;</span>key client.key
 </code></pre>
 <p>De modo similar, elimine la directiva <code>tls-auth</code>, ya que añadirá <code>ta.key</code> directamente al archivo de configuración del cliente (y se configura el servidor para que use <code>tls-crypt</code>):</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"># If a tls-auth key is used on the server
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash"># If a tls-auth key is used on the server
 # then every client must also have the key.
 <span class="highlight">;</span>tls-auth ta.key 1
 </code></pre>
 <p>Refleje los ajustes de <code>cipher</code> y <code>auth</code> establecidos en el archivo <code>/etc/openvpn/server/server.conf</code>:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">cipher AES-256-GCM</span>
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">cipher AES-256-GCM</span>
 <span class="highlight">auth SHA256</span>
 </code></pre>
 <p>Luego, agregue la directiva <code>key-direction</code> en algún lugar del archivo. Es <strong>necesario que</strong> fije el valor &ldquo;1&rdquo; para esta, a fin de que la VPN funcione de manera correcta en la máquina cliente:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">key-direction 1</span>
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">key-direction 1</span>
 </code></pre>
 <p>Por último, añada algunas líneas con <strong>comentarios eliminados</strong> para administrar varios métodos que los clientes VPN basados ​​en Linux utilizarán para la resolución DNS. Añadirá dos conjuntos de líneas con comentarios eliminados similares, pero separados. El primer conjunto es para los clientes que <em>no</em> utilizan <code>systemd-resolved</code> para administrar DNS. Estos clientes dependen de la utilidad <code>resolvconf</code> para actualizar la información DNS para clientes de Linux.</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
 <span class="highlight">; up /etc/openvpn/update-resolv-conf</span>
 <span class="highlight">; down /etc/openvpn/update-resolv-conf</span>
 </code></pre>
 <p>Luego, añada otro conjunto de líneas para clientes que utilicen <code>systemd-resolved</code> para la resolución de DNS:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/base.conf">/home/jrodenas/client-configs/base.conf</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
+<pre class="code-pre  second-environment"><code class="code-highlight language-bash"><span class="highlight">; script-security 2</span>
 <span class="highlight">; up /etc/openvpn/update-systemd-resolved</span>
 <span class="highlight">; down /etc/openvpn/update-systemd-resolved</span>
 <span class="highlight">; down-pre</span>
@@ -615,7 +615,7 @@ group nogroup
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/jrodenas/client-configs/make_config.sh
 </li></ul></code></pre>
 <p>Dentro de este, agregue el siguiente contenido:</p>
-<div class="code-label " title="/home/jrodenas/client-configs/make_config.sh">`/home/jrodenas/client-configs/make_config.sh`</div><pre class="code-pre sh second-environment"><code class="code-highlight language-bash">#!/bin/bash
+<pre class="code-pre sh second-environment"><code class="code-highlight language-bash">#!/bin/bash
 
 # First argument: Client identifier
 
