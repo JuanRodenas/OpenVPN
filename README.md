@@ -1,6 +1,22 @@
 # OpenVPN
 Proyecto para crear una vpn OpenVPN en ubuntu.
+El proyecto OpenVPN® es una red privada segura, asequible y fácil de gestionar. OpenVPN es tanto un protocolo VPN como un software que utiliza técnicas VPN para asegurar conexiones punto a punto y de sitio a sitio. Actualmente, es uno de los protocolos VPN más populares entre los usuarios de VPN.
 
+#
+
+<p align="center">
+    <a href="https://openvpn.net/">
+        <img src="https://github.com/JuanRodenas/OpenVPN/blob/main/openvpn.png" alt="OpenVPN">
+    </a>
+    <br>
+    <strong>OpenVPN® es una red privada segura, asequible y fácil de gestionar</strong>
+</p>
+<!-- markdownlint-enable MD033 -->
+
+#
+
+<p>📁 <a href="https://openvpn.net/community-resources/#documentation">Documentación oficial</a></p>
+<p>📁 <a href="https://openvpn.net/">Web oficial</a></p>
 
 
 <div class="content-body tutorial-content" data-growable-markdown>
