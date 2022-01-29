@@ -490,7 +490,8 @@ key <span class="highlight">server</span>.key
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo nano /etc/ufw/before.rules
 </li></ul></code></pre>
 <p>Las reglas de UFW suelen agregarse usando el comando <code>ufw</code>. Sin embargo, las reglas enumeradas en el archivo <code>before.rules</code> se leen e implementan antes de que se carguen las reglas de UFW. En la parte superior del archivo, agregue las líneas resaltadas a continuación. Con esto, se establecerá la política predeterminada de la cadena <code>POSTROUTING</code> en la tabla <code>nat</code> y se enmascarará el tráfico que provenga de la VPN. Recuerde reemplazar <code><span class="highlight">eth0</span></code> en la línea <code>-A POSTROUTING</code> siguiente por la interfaz que encontró en el comando anterior:</p>
-<div class="code-label " title="/etc/ufw/before.rules">/etc/ufw/before.rules</div><pre class="code-pre "><code class="code-highlight language-bash">#
+<p><code>/etc/ufw/before.rules</code></p>
+<pre class="code-pre "><code class="code-highlight language-bash">#
 # rules.before
 #
 # Rules that should be run before the ufw command line added rules. Custom
@@ -516,7 +517,7 @@ key <span class="highlight">server</span>.key
 <pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo nano /etc/default/ufw
 </li></ul></code></pre>
 <p>Dentro de este, encuentre la directiva <code>DEFAULT_FORWARD_POLICY</code> y cambie el valor de <code>DROP</code> a <code>ACCEPT</code>:</p>
-<div class="code-label " title="/etc/default/ufw">/etc/default/ufw</div><pre class="code-pre "><code class="code-highlight language-bash">DEFAULT_FORWARD_POLICY="<span class="highlight">ACCEPT</span>"
+<div class="code-label " title="/etc/default/ufw"><code>/etc/default/ufw</code></div><pre class="code-pre "><code class="code-highlight language-bash">DEFAULT_FORWARD_POLICY="<span class="highlight">ACCEPT</span>"
 </code></pre>
 <p>Guarde y cierre el archivo cuando termine.</p>
 
