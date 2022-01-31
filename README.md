@@ -71,34 +71,34 @@ El proyecto OpenVPN® es una red privada segura, asequible y fácil de gestionar
 <h2 id="paso-2-preparar-un-directorio-para-la-infraestructura-de-clave-pública">Paso 2: Preparar un directorio para la infraestructura de clave pública</h2>
 
 <p>Ahora que instaló <code>easy-rsa</code>, es el momento de crear una <a href="https://en.wikipedia.org/wiki/Public_key_infrastructure">infraestructura de clave pública</a> (PKI) de esqueleto en el servidor de CA. Verifique que siga conectado con su non-root user y cree un directorio <code>easy-rsa</code>. Asegúrese de <strong>no utilizar sudo</strong> para ejecutar ninguno de los siguientes comandos, dado que su usuario normal debe administrar la CA e interactuar con ella sin privilegios elevados.</p>
-<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir /home/$(user)/easy-rsa
 </li></ul></code></pre>
 <p>Con esto se creará un directorio nuevo llamado <code>easy-rsa</code> en su carpeta de inicio. Usaremos este directorio para crear enlaces simbólicos que apunten a los archivos del paquete <code>easy-rsa</code> que instalamos en el paso anterior. Estos archivos se encuentran en la carpeta <code>/usr/share/easy-rsa</code> en el servidor de CA.</p>
 
 <p>Cree los enlaces simbólicos con el comando <code>ln</code>:</p>
-<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ln -s /usr/share/easy-rsa/* /home/jrodenas/easy-rsa/
+<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ln -s /usr/share/easy-rsa/* /home/$(user)/easy-rsa/
 </li></ul></code></pre>
 <p><span class='note'><strong>Nota:</strong> Aunque en otras guías se le indique copiar los archivos del paquete <code>easy-rsa</code> a su directorio de la PKI, en este tutorial, usaremos enlaces simbólicos. Como resultado, toda actualización del paquete <code>easy-rsa</code> se reflejará automáticamente en las secuencias de comandos de su PKI.<br></span></p>
 
 <p>Para restringir el acceso a su nuevo directorio de la PKI, asegúrese de que solo el propietario pueda acceder a él usando el comando <code>chmod</code>:</p>
-<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">chmod <span class="highlight">700</span> /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">chmod <span class="highlight">700</span> /home/$(user)/easy-rsa
 </li></ul></code></pre>
 <p>Por último, inicie la PKI dentro del directorio <code>easy-rsa</code>:</p>
-<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li><li class="line" data-prefix="$">./easyrsa init-pki
 </li></ul></code></pre><pre class="code-pre "><code><div class="secondary-code-label " title="Output">Output</div>init-pki complete; you may now create a CA or requests.
-Your newly created PKI dir is: /home/jrodenas/easy-rsa/pki
+Your newly created PKI dir is: /home/$(user)/easy-rsa/pki
 </code></pre>
 <p>Después de completar esta sección, tendrá un directorio con todos los archivos necesarios para crear una entidad de certificación. En la siguiente sección, creará la clave privada y el certificado público para su CA.</p>
 
 <h2 id="paso-3-crear-una-entidad-de-certificación">Paso 3: Crear una entidad de certificación</h2>
 
 <p>Para poder crear la clave privada y el certificado de su CA, debe crear y completar un archivo llamado <code>vars</code> con algunos valores predeterminados. Primero, usará <code>cd</code> para ingresar al directorio <code>easy-rsa</code> y, luego, creará y editará el archivo <code>vars</code> con <code>nano</code> o el editor de texto que prefiera:</p>
-<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li><li class="line" data-prefix="$">nano vars
 </li></ul></code></pre>
 <p>Una vez que se abra el archivo, pegue las siguientes líneas y sustituya cada valor resaltado por la información de su propia organización. Lo importante aquí es asegurarse de no dejar ninguno de los valores en blanco:</p>
-<pre class="code-pre "><code><div class="secondary-code-label " title="/home/jrodenas/easy-rsa/vars">/home/jrodenas/easy-rsa/vars</div>set_var EASYRSA_REQ_COUNTRY    "<span class="highlight">US</span>"
+<pre class="code-pre "><code><div class="secondary-code-label " title="/home/$(user)/easy-rsa/vars">/home/$(user)/easy-rsa/vars</div>set_var EASYRSA_REQ_COUNTRY    "<span class="highlight">US</span>"
 set_var EASYRSA_REQ_PROVINCE   "<span class="highlight">NewYork</span>"
 set_var EASYRSA_REQ_CITY       "<span class="highlight">New York City</span>"
 set_var EASYRSA_REQ_ORG        "<span class="highlight">Organization</span>"
@@ -123,7 +123,7 @@ Common Name (eg: your user, host, or server name) [Easy-RSA CA]:
 
 CA creation complete and you may now import and sign cert requests.
 Your new CA certificate file for publishing is at:
-/home/jrodenas/easy-rsa/pki/ca.crt
+/home/$(user)/easy-rsa/pki/ca.crt
 </code></pre>
 <span class='note'><p>
 <strong>Nota:</strong> Si no desea que se le solicite una contraseña cada vez que interactúe con su CA, puede ejecutar el comando <code>build-ca</code> con la opción <code>nopass</code>, de la siguiente forma:</p>
@@ -131,7 +131,7 @@ Your new CA certificate file for publishing is at:
 </li></ul></code></pre>
 <p></p></span>
 
-<p>Ahora, tiene dos archivos importantes, <code>/home/jrodenas/easy-rsa/pki/ca.crt</code> y <code>/home/jrodenas/easy-rsa/pki/private/ca.key</code>, que conforman los componentes públicos y privados de una entidad de certificación.</p>
+<p>Ahora, tiene dos archivos importantes, <code>/home/$(user)/easy-rsa/pki/ca.crt</code> y <code>/home/$(user)/easy-rsa/pki/private/ca.key</code>, que conforman los componentes públicos y privados de una entidad de certificación.</p>
 
 <ul>
 <li><p><code>ca.crt</code> es el archivo del certificado público de la CA. Los usuarios, los servidores y los clientes utilizarán este certificado para verificar que sean parte de la misma red de confianza. Todos los usuarios y los servidores que usen su CA deberán tener una copia de este archivo. Todas las partes se basarán en el certificado público para asegurarse de que nadie suplante un sistema y realice un <a href="https://en.wikipedia.org/wiki/Man-in-the-middle_attack">ataque con intermediario</a>.</p></li>
@@ -147,7 +147,7 @@ Your new CA certificate file for publishing is at:
 <p>Para importar el certificado público de la CA a un segundo sistema de Linux, como otro servidor o una computadora local, primero debe obtener una copia del archivo <code>ca.crt</code> de su servidor de CA. Puede usar el comando <code>cat</code> para ver el resultado en una terminal y, luego, copiarlo y pegarlo en un archivo en la segunda computadora en la que se importe el certificado. También puede usar herramientas como <code>scp</code> y <code>rsync</code> para transferir el archivo entre sistemas. Sin embargo, usaremos el método de copiar y pegar con <code>nano</code> en este paso, ya que funciona en todos los sistemas.</p>
 
 <p>Como non-root user en el servidor de CA, ejecute el siguiente comando:</p>
-<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cat /home/jrodenas/easy-rsa/pki/ca.crt
+<pre class="code-pre command prefixed"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cat /home/$(user)/easy-rsa/pki/ca.crt
 </li></ul></code></pre>
 <p>El resultado en su terminal será similar al siguiente:</p>
 <pre class="code-pre "><code><div class="secondary-code-label " title="Output">Output</div>
@@ -202,17 +202,17 @@ BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjAwMzE4MDMxNjI2WhcNMzAw
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo apt update
 </li><li class="line" data-prefix="$">sudo apt install openvpn easy-rsa
 </li></ul></code></pre>
-<p>A continuación, deberá crear un directorio nuevo en el servidor de OpenVPN como su non-root user llamado <code>/home/jrodenas/easy-rsa</code>:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir /home/jrodenas/easy-rsa
+<p>A continuación, deberá crear un directorio nuevo en el servidor de OpenVPN como su non-root user llamado <code>/home/$(user)/easy-rsa</code>:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir /home/$(user)/easy-rsa
 </li></ul></code></pre>
-<p>Ahora, deberá crear un symlink desde la secuencia de comandos de <code>easyrsa</code> que el paquete instaló en el directorio <code>/home/jrodenas/easy-rsa</code> que acaba de crear:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ln -s /usr/share/easy-rsa/* /home/jrodenas/easy-rsa/
+<p>Ahora, deberá crear un symlink desde la secuencia de comandos de <code>easyrsa</code> que el paquete instaló en el directorio <code>/home/$(user)/easy-rsa</code> que acaba de crear:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ln -s /usr/share/easy-rsa/* /home/$(user)/easy-rsa/
 </li></ul></code></pre>
 <p><span class='note'><strong>Nota:</strong> Aunque otras guías le indiquen que copie los archivos del paquete <code>easy-rsa</code> a su directorio de la PKI, en este tutorial, usaremos enlaces simbólicos. Como resultado, toda actualización del paquete <code>easy-rsa</code> se reflejará automáticamente en las secuencias de comandos de su PKI.<br></span></p>
 
 <p>Por último, asegúrese de que el propietario del directorio sea su non-root sudo user y restrinja el acceso a ese usuario usando <code>chmod</code>:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo chown <span class="highlight">jrodenas</span> /home/jrodenas/easy-rsa
-</li><li class="line" data-prefix="$">chmod 700 /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo chown <span class="highlight">$(user)</span> /home/$(user)/easy-rsa
+</li><li class="line" data-prefix="$">chmod 700 /home/$(user)/easy-rsa
 </li></ul></code></pre>
 <p>Cuando haya instalado estos programas y se hayan movido a las ubicaciones correctas en su sistema, el siguiente paso es crear una infraestructura de clave pública (PKI) en el servidor de OpenVPN para que pueda solicitar y administrar certificados TLS para clientes y otros servidores que se conecten a su VPN.</p>
 
@@ -221,11 +221,11 @@ BQAwFjEUMBIGA1UEAwwLRWFzeS1SU0EgQ0EwHhcNMjAwMzE4MDMxNjI2WhcNMzAw
 <p>Antes de poder crear la clave y el certificado privados de su servidor de OpenVPN, deberá crear un directorio local de infraestructura de clave pública en su servidor de OpenVPN. Usará este directorio para gestionar las solicitudes de certificado de clientes y del servidor en vez de hacerlas directamente en su servidor CA.</p>
 
 <p>Para crear un directorio de PKI en su servidor de OpenVPN, deberá completar un archivo llamado <code>vars</code> con algunos valores predeterminados. Primero, usará <code>cd</code> para ingresar al directorio <code>easy-rsa</code> y, luego, creará y editará el archivo <code>vars</code> utilizando nano o el editor de texto que prefiera.</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li><li class="line" data-prefix="$">nano vars
 </li></ul></code></pre>
 <p>Una vez abierto el archivo, pegue las siguientes dos líneas:</p>
-<div class="code-label " title="/home/jrodenas/easy-rsa/vars">/home/jrodenas/easy-rsa/vars</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">set_var EASYRSA_ALGO "ec"
+<div class="code-label " title="/home/$(user)/easy-rsa/vars">/home/$(user)/easy-rsa/vars</div><pre class="code-pre  second-environment"><code class="code-highlight language-bash">set_var EASYRSA_ALGO "ec"
 set_var EASYRSA_DIGEST "sha512"
 </code></pre>
 <p>Estas son las únicas dos líneas que necesita en este archivo <code>vars</code> en su servidor OpenVPN ya que no se usará como Autoridad de certificación. Estas líneas garantizarán que sus claves y solicitudes de certificado privadas estén configurados para utilizar la Elliptic Curve Cryptography (ECC) moderna para generar claves y firmas seguras para sus clientes y su servidor de OpenVPN.</p>
@@ -248,8 +248,8 @@ set_var EASYRSA_DIGEST "sha512"
 
 <p>Ahora que su servidor de OpenVPN tiene todos los requisitos previos instalados, el siguiente paso es generar una clave privada y una solicitud de firma de certificados (CSR) en su servidor de OpenVPN. A continuación, transferirá la solicitud a su CA para que se firme, lo que creará el certificado requerido. Cuando tenga un certificado firmado, lo transferirá de vuelta al servidor de OpenVPN y lo instalará para que el servidor lo use.</p>
 
-<p>Para comenzar, diríjase al directorio <code>/home/jrodenas/easy-rsa</code> de su servidor de OpenVPN como su non-root user:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<p>Para comenzar, diríjase al directorio <code>/home/$(user)/easy-rsa</code> de su servidor de OpenVPN como su non-root user:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li></ul></code></pre>
 <p>Invoque <code>easyrsa</code> con la opción <code>gen-req</code> seguida de un nombre común (CN) para la máquina. El CN puede ser el que prefiera, pero puede resultarle útil que sea descriptivo. Durante este tutorial, el CN del servidor de OpenVPN será <code>server</code>. Asegúrese de incluir también la opción <code>nopass</code>. Si no lo hace, se protegerá con contraseña el archivo de solicitud, lo que puede generar problemas de permisos más adelante.</p>
 
@@ -258,11 +258,11 @@ set_var EASYRSA_DIGEST "sha512"
 </li></ul></code></pre><pre class="code-pre  second-environment"><code><div class="secondary-code-label " title="Output">Output</div>Common Name (eg: your user, host, or server name) [server]:
 
 Keypair and certificate request completed. Your files are:
-req: /home/jrodenas/easy-rsa/pki/reqs/server.req
-key: /home/jrodenas/easy-rsa/pki/private/server.key
+req: /home/$(user)/easy-rsa/pki/reqs/server.req
+key: /home/$(user)/easy-rsa/pki/private/server.key
 </code></pre>
 <p>Con esto, se crearán una clave privada para el servidor y un archivo de solicitud de certificado llamado <code>server.req</code>. Copie la clave del servidor al directorio <code>/etc/openvpn/server</code>:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo cp /home/jrodenas/easy-rsa/pki/private/server.key /etc/openvpn/server/
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo cp /home/$(user)/easy-rsa/pki/private/server.key /etc/openvpn/server/
 </li></ul></code></pre>
 <p>Tras completar estos pasos, habrá creado correctamente una clave privada para su servidor de OpenVPN. También generó una solicitud de firma de certificado para el servidor de OpenVPN. Ahora la CSR está listo para firmar por su CA. En la siguiente sección de este tutorial, aprenderá a firmar una CSR con la clave privada de su servidor CA.</p>
 
@@ -271,10 +271,10 @@ key: /home/jrodenas/easy-rsa/pki/private/server.key
 <p>En el paso anterior, creó una solicitud de firma de certificado (CSR) y una clave privada para el servidor de OpenVPN. Ahora el servidor de CA necesita conocer el certificado <code>server</code> y validarlo. Una vez que el CA valide y devuelva el certificado al servidor de OpenVPN, los clientes que confían en su CA podrán confiar también en el servidor de OpenVPN.</p>
 
 <p>En el servidor de OpenVPN, como su non-root user, use SCP u otro método de transferencia para copiar la solicitud de certificado <code>server.req</code> al servidor CA para firmar lo siguiente:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp /home/jrodenas/easy-rsa/pki/reqs/server.req <span class="highlight">jrodenas</span>@<span class="highlight">your_ca_server_ip</span>:/tmp
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp /home/$(user)/easy-rsa/pki/reqs/server.req <span class="highlight">$(user)</span>@<span class="highlight">your_ca_server_ip</span>:/tmp
 </li></ul></code></pre>
-<p>Si siguió el tutorial <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-and-configure-a-certificate-authority-ca-on-ubuntu-20-04">Cómo instalar y configurar una entidad de certificación (CA) en Ubuntu 20.04</a> de los requisitos previos, el siguiente paso será iniciar sesión en el <strong>servidor de CA</strong> como el non-root user que creó para administrar su CA. Utilice <code>cd</code> para el directorio <code>/home/jrodenas/easy-rsa</code> donde creó su PK y luego importe la solicitud de certificado utilizando la secuencia de comandos <code>easyrsa</code>:</p>
-<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<p>Si siguió el tutorial <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-and-configure-a-certificate-authority-ca-on-ubuntu-20-04">Cómo instalar y configurar una entidad de certificación (CA) en Ubuntu 20.04</a> de los requisitos previos, el siguiente paso será iniciar sesión en el <strong>servidor de CA</strong> como el non-root user que creó para administrar su CA. Utilice <code>cd</code> para el directorio <code>/home/$(user)/easy-rsa</code> donde creó su PK y luego importe la solicitud de certificado utilizando la secuencia de comandos <code>easyrsa</code>:</p>
+<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li><li class="line" data-prefix="$">./easyrsa import-req /tmp/server.req server
 </li></ul></code></pre><pre class="code-pre  third-environment"><code><div class="secondary-code-label " title="Output">Output</div>. . .
 The request has been successfully imported with a short name of: server
@@ -298,15 +298,15 @@ commonName = <span class="highlight">server</span>
 Type the word 'yes' to continue, or any other input to abort.
 Confirm request details: yes
 . . .
-Certificate created at: /home/jrodenas/easy-rsa/pki/issued/server.crt
+Certificate created at: /home/$(user)/easy-rsa/pki/issued/server.crt
 </code></pre>
 <p>Tenga en cuenta que si cifró su clave privada CA, se le solicitará su contraseña en este momento.</p>
 
 <p>Completados estos pasos, ha firmado la solicitud de certificado del servidor de OpenVPN usando la clave privada del servidor de CA. El archivo <code>server.crt</code> resultante contiene la clave de cifrado pública del servidor de OpenVPN, así como una nueva firma del servidor de CA. El objetivo de la firma es indicar a todos los que confían en el servidor de CA que también pueden confiar en el servidor de OpenVPN cuando se conecten a él.</p>
 
 <p>Para terminar de configurar los certificados, copie los archivos <code>server.crt</code> y <code>ca.crt</code> desde el servidor de CA al servidor de OpenVPN:</p>
-<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp pki/issued/server.crt <span class="highlight">jrodenas</span>@<span class="highlight">your_vpn_server_ip</span>:/tmp
-</li><li class="line" data-prefix="$">scp pki/ca.crt <span class="highlight">jrodenas</span>@<span class="highlight">your_vpn_server_ip</span>:/tmp
+<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp pki/issued/server.crt <span class="highlight">$(user)</span>@<span class="highlight">your_vpn_server_ip</span>:/tmp
+</li><li class="line" data-prefix="$">scp pki/ca.crt <span class="highlight">$(user)</span>@<span class="highlight">your_vpn_server_ip</span>:/tmp
 </li></ul></code></pre>
 <p>Ahora vuelva a su servidor de OpenVPN, copie los archivos de <code>/tmp</code> a <code>/etc/openvpn/server</code>:</p>
 <pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">sudo cp /tmp/{server.crt,ca.crt} /etc/openvpn/server
@@ -319,8 +319,8 @@ Certificate created at: /home/jrodenas/easy-rsa/pki/issued/server.crt
 
 <p>Esta opción lo ayudará a asegurarse de que su servidor de OpenVPN pueda hacer frente al tráfico sin autenticación, a los escáneres de puerto y a los ataques de denegación de servicio, que pueden restringir recursos del servidor. También hace que sea más difícil identificar el tráfico de red de OpenVPN.</p>
 
-<p>Para generar la clave <code>tls-crypt</code> antes compartida, ejecute lo siguiente en el servidor de OpenVPN en el directorio <code>/home/jrodenas/easy-rsa</code>:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<p>Para generar la clave <code>tls-crypt</code> antes compartida, ejecute lo siguiente en el servidor de OpenVPN en el directorio <code>/home/$(user)/easy-rsa</code>:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li><li class="line" data-prefix="$">openvpn --genkey --secret ta.key
 </li></ul></code></pre>
 <p>El resultado será un archivo llamado <code>ta.key</code>. Cópielo en el directorio <code>/etc/openvpn/server/</code>:</p>
@@ -335,23 +335,23 @@ Certificate created at: /home/jrodenas/easy-rsa/pki/issued/server.crt
 <p>Generaremos un par individual de clave y certificado de cliente para esta guía. Si tiene más de un cliente, puede repetir este proceso para cada uno. Tenga en cuenta que deberá pasar un valor de nombre único a la secuencia de comandos para cada cliente. En este tutorial, el primer par de certificado y clave se denominará <code>client1</code>.</p>
 
 <p>Comience por crear una estructura de directorios dentro de su directorio de inicio para almacenar los archivos de certificado y clave de cliente:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir -p /home/jrodenas/client-configs/keys
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir -p /home/$(user)/client-configs/keys
 </li></ul></code></pre>
 <p>Debido a que almacenará los pares de certificado y clave de sus clientes y los archivos de configuración en este directorio, debe bloquear sus permisos ahora como medida de seguridad:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">chmod -R 700 /home/jrodenas/client-configs
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">chmod -R 700 /home/$(user)/client-configs
 </li></ul></code></pre>
 <p>Luego, diríjase al directorio EasyRSA y ejecute la secuencia de comandos ​​​​​​<code>easyrsa</code> con las opciones <code>gen-req</code> y <code>nopass</code>, junto con el nombre común para el cliente:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li><li class="line" data-prefix="$">./easyrsa gen-req <span class="highlight">client1</span> nopass
 </li></ul></code></pre>
-<p>Presione <code>ENTER</code> para confirmar el nombre común. Luego, copie el archivo <code>client1.key</code> al directorio <code>/home/jrodenas/client-configs/keys/</code> que creó antes:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp pki/private/client1.key /home/jrodenas/client-configs/keys/
+<p>Presione <code>ENTER</code> para confirmar el nombre común. Luego, copie el archivo <code>client1.key</code> al directorio <code>/home/$(user)/client-configs/keys/</code> que creó antes:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp pki/private/client1.key /home/$(user)/client-configs/keys/
 </li></ul></code></pre>
 <p>Luego, transfiera el archivo <code>client1.req</code> a su servidor de CA usando un método seguro:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp pki/reqs/client1.req <span class="highlight">jrodenas</span>@<span class="highlight">your_ca_server_ip</span>:/tmp
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp pki/reqs/client1.req <span class="highlight">$(user)</span>@<span class="highlight">your_ca_server_ip</span>:/tmp
 </li></ul></code></pre>
 <p>Ahora inicie sesión en su servidor de CA. A continuación, diríjase al directorio de EasyRSA e importe la solicitud de certificado:</p>
-<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/easy-rsa
+<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/easy-rsa
 </li><li class="line" data-prefix="$">./easyrsa import-req /tmp/client1.req client1
 </li></ul></code></pre>
 <p>Luego, firme la solicitud como lo hizo para el servidor en el paso anterior. Esta vez, asegúrese de especificar el tipo de solicitud <code>client</code>:</p>
@@ -364,15 +364,15 @@ Confirm request details: <span class="highlight">yes</span>
 <p>Nuevamente, si cifró su clave de CA, se le solicitará la contraseña en este punto.</p>
 
 <p>Con esto, se creará un archivo de certificado de cliente llamado <code>client1.crt</code>. Transfiera este archivo de vuelta al servidor:</p>
-<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp pki/issued/client1.crt <span class="highlight">jrodenas</span>@<span class="highlight">your_server_ip</span>:/tmp
+<pre class="code-pre command prefixed third-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">scp pki/issued/client1.crt <span class="highlight">$(user)</span>@<span class="highlight">your_server_ip</span>:/tmp
 </li></ul></code></pre>
-<p>Vuelva a su servidor de OpenVPN, copie el certificado del cliente al directorio <code>/home/jrodenas/client-configs/keys/</code>:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /tmp/client1.crt /home/jrodenas/client-configs/keys/
+<p>Vuelva a su servidor de OpenVPN, copie el certificado del cliente al directorio <code>/home/$(user)/client-configs/keys/</code>:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /tmp/client1.crt /home/$(user)/client-configs/keys/
 </li></ul></code></pre>
-<p>Luego copie los archivos <code>ca.crt</code> y <code>ta.key</code> al directorio <code>/home/jrodenas/client-configs/keys/</code> también y establezca los permisos correspondientes para su usuario sudo:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /home/jrodenas/easy-rsa/ta.key /home/jrodenas/client-configs/keys/
-</li><li class="line" data-prefix="$">sudo cp /etc/openvpn/server/ca.crt /home/jrodenas/client-configs/keys/
-</li><li class="line" data-prefix="$">sudo chown <span class="highlight">jrodenas</span>.<span class="highlight">jrodenas</span> /home/jrodenas/client-configs/keys/*
+<p>Luego copie los archivos <code>ca.crt</code> y <code>ta.key</code> al directorio <code>/home/$(user)/client-configs/keys/</code> también y establezca los permisos correspondientes para su usuario sudo:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /home/$(user)/easy-rsa/ta.key /home/$(user)/client-configs/keys/
+</li><li class="line" data-prefix="$">sudo cp /etc/openvpn/server/ca.crt /home/$(user)/client-configs/keys/
+</li><li class="line" data-prefix="$">sudo chown <span class="highlight">$(user)</span>.<span class="highlight">$(user)</span> /home/$(user)/client-configs/keys/*
 </li></ul></code></pre>
 <p>Con esto, se generarán los certificados y las claves de su servidor y cliente, y se almacenarán en los directorios correspondientes de su servidor de OpenVPN. Aún quedan algunas acciones que se deben realizar con estos archivos, pero se realizarán más adelante. Por ahora, puede continuar con la configuración de OpenVPN.</p>
 
@@ -567,13 +567,13 @@ Apr 29 15:39:59 ubuntu-20 openvpn[16872]: Initialization Sequence Completed
 <p>Es posible que se deban crear archivos de configuración para clientes de OpenVPN, ya que todos los clientes deben tener su propia configuración y alinearse con los ajustes mencionados en el archivo de configuración del servicio. En este paso, en lugar de detallarse el proceso para escribir un único archivo de configuración que solo se pueda usar en un cliente, se describe un proceso para crear una infraestructura de configuración de cliente que puede usar para generar archivos de configuración sobre la marcha. Primero creará un archivo de configuración &ldquo;de base&rdquo; y, luego, una secuencia de comandos que le permitirá generar archivos de configuración, certificados y claves de clientes exclusivos según sea necesario.</p>
 
 <p>Comience creando un nuevo directorio en el que almacenará archivos de configuración de clientes dentro del directorio <code>client-configs</code> creado anteriormente:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir -p /home/jrodenas/client-configs/files
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">mkdir -p /home/$(user)/client-configs/files
 </li></ul></code></pre>
 <p>Luego, copie un archivo de configuración de cliente de ejemplo al directorio <code>client-configs</code> para usarlo como su configuración de base:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /home/jrodenas/client-configs/base.conf
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cp /usr/share/doc/openvpn/examples/sample-config-files/client.conf /home/$(user)/client-configs/base.conf
 </li></ul></code></pre>
 <p>Abra este archivo nuevo con <code>nano</code> o su editor de texto preferido:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/jrodenas/client-configs/base.conf
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/$(user)/client-configs/base.conf
 </li></ul></code></pre>
 <p>Dentro de este, ubique la directiva <code>remote</code>. Esto dirige al cliente a la dirección de su servidor de OpenVPN: la dirección IP pública de su servidor de OpenVPN. Si decidió cambiar el puerto en el que el servidor de OpenVPN escucha, también deberá cambiar <code>1194</code> por el puerto seleccionado:</p>
 <pre class="code-pre  second-environment"><code class="code-highlight language-bash">. . .
@@ -630,17 +630,17 @@ group nogroup
 
 <p>Más adelante, en el <a href="#step-13-%E2%80%94-installing-the-client-configuration">Paso 13: paso para Instalar la configuración del cliente</a> de este tutorial, aprenderá a determinar cómo funciona la resolución DNS para los clientes Linux y qué sección no debería tener comentarios.</p>
 
-<p>A continuación, cree una secuencia de comandos que compile su configuración de base con el certificado, la clave y los archivos de cifrado pertinentes, y, luego, ubique la configuración generada en el directorio <code>/home/jrodenas/client-configs/files</code>. Abra un nuevo archivo llamado <code>make_config.sh</code> en el directorio <code>/home/jrodenas/client-configs</code>:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/jrodenas/client-configs/make_config.sh
+<p>A continuación, cree una secuencia de comandos que compile su configuración de base con el certificado, la clave y los archivos de cifrado pertinentes, y, luego, ubique la configuración generada en el directorio <code>/home/$(user)/client-configs/files</code>. Abra un nuevo archivo llamado <code>make_config.sh</code> en el directorio <code>/home/$(user)/client-configs</code>:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">nano /home/$(user)/client-configs/make_config.sh
 </li></ul></code></pre>
 <p>Dentro de este, agregue el siguiente contenido:</p>
 <pre class="code-pre sh second-environment"><code class="code-highlight language-bash">#!/bin/bash
 
 # First argument: Client identifier
 
-KEY_DIR=/home/jrodenas/client-configs/keys
-OUTPUT_DIR=/home/jrodenas/client-configs/files
-BASE_CONFIG=/home/jrodenas/client-configs/base.conf
+KEY_DIR=/home/$(user)/client-configs/keys
+OUTPUT_DIR=/home/$(user)/client-configs/files
+BASE_CONFIG=/home/$(user)/client-configs/base.conf
 
 cat ${BASE_CONFIG} \
     &lt;(echo -e '&lt;ca&gt;') \
@@ -657,7 +657,7 @@ cat ${BASE_CONFIG} \
 <p>Guarde y cierre el archivo cuando termine.</p>
 
 <p>Antes de continuar, asegúrese de marcar este archivo como ejecutable escribiendo lo siguiente:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">chmod 700 /home/jrodenas/client-configs/make_config.sh
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">chmod 700 /home/$(user)/client-configs/make_config.sh
 </li></ul></code></pre>
 <p>Esta secuencia de comandos realizará una copia del archivo <code>base.conf</code> que creó, recopilará todos los archivos de certificados y claves que haya confeccionado para su cliente, extraerá el contenido de estos y los anexará a la copia del archivo de configuración de base, y exportará todo este contenido a un nuevo archivo de configuración de cliente. Esto significa que se evita la necesidad de administrar los archivos de configuración, certificado y clave del cliente por separado, y que toda la información necesaria se almacena en un solo lugar. El beneficio de este método es que, si alguna vez necesita agregar un cliente más adelante, puede simplemente ejecutar esta secuencia de comandos para crear de manera rápida el archivo de nueva configuración y asegurarse de que toda la información importante se almacene en una sola ubicación de acceso sencillo.</p>
 
@@ -665,12 +665,12 @@ cat ${BASE_CONFIG} \
 
 <h2 id="paso-12-generar-las-configuraciones-de-clientes">Paso 12: Generar las configuraciones de clientes</h2>
 
-<p>Si siguió la guía, creó un certificado y una clave de cliente llamados <code>client1.crt</code> y <code>client1.key</code>, respectivamente, en el paso 6. Puede generar un archivo de configuración para estas credenciales si se dirige al directorio <code>/home/jrodenas/client-configs</code> y ejecuta la secuencia de comandos que realizó al final del paso anterior:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/jrodenas/client-configs
+<p>Si siguió la guía, creó un certificado y una clave de cliente llamados <code>client1.crt</code> y <code>client1.key</code>, respectivamente, en el paso 6. Puede generar un archivo de configuración para estas credenciales si se dirige al directorio <code>/home/$(user)/client-configs</code> y ejecuta la secuencia de comandos que realizó al final del paso anterior:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">cd /home/$(user)/client-configs
 </li><li class="line" data-prefix="$">./make_config.sh <span class="highlight">client1</span>
 </li></ul></code></pre>
-<p>Con esto, se creará un archivo llamado <code>client1.ovpn</code> en su directorio <code>/home/jrodenas/client-configs/files</code>:</p>
-<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ls /home/jrodenas/client-configs/files
+<p>Con esto, se creará un archivo llamado <code>client1.ovpn</code> en su directorio <code>/home/$(user)/client-configs/files</code>:</p>
+<pre class="code-pre command prefixed second-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="$">ls /home/$(user)/client-configs/files
 </li></ul></code></pre><pre class="code-pre  second-environment"><code><div class="secondary-code-label " title="Output">Output</div>client1.ovpn
 </code></pre>
 <p>Debe transferir este archivo al dispositivo que planee usar como cliente. Por ejemplo, puede ser su computadora local o un dispositivo móvil.</p>
@@ -678,7 +678,7 @@ cat ${BASE_CONFIG} \
 <p>Si bien las aplicaciones exactas empleadas para lograr esta transferencia dependerán del sistema operativo de su dispositivo y sus preferencias personales, un método seguro y confiable consiste en usar el protocolo de transferencia de archivos SSH (SFTP ) o la copia segura (SCP) en el backend. Con esto, se transportarán los archivos de autenticación de VPN de su cliente a través de una conexión cifrada.</p>
 
 <p>Aquí tiene un comando SFTP de ejemplo que puede ejecutar desde su computadora local (macOS o Linux). Esto copiará el archivo <code><span class="highlight">client1.ovpn</span></code> que hemos creado en el último paso a su directorio de inicio:</p>
-<pre class="code-pre custom_prefix prefixed local-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="local$">sftp <span class="highlight">jrodenas</span>@<span class="highlight">openvpn_server_ip</span>:client-configs/files/client1.ovpn /home/jrodenas/
+<pre class="code-pre custom_prefix prefixed local-environment"><code class="code-highlight language-bash"><ul class="prefixed"><li class="line" data-prefix="local$">sftp <span class="highlight">$(user)</span>@<span class="highlight">openvpn_server_ip</span>:client-configs/files/client1.ovpn /home/$(user)/
 </li></ul></code></pre>
 <p>A continuación, se muestran diferentes herramientas y tutoriales para transferir de manera segura los archivos del servidor de OpenVPN a una computadora local:</p>
 
