@@ -922,4 +922,4 @@ down /etc/openvpn/update-resolv-conf
 
   </div>
 Fuente:
-    [LINK](https://www.digitalocean.com/community/tutorials/how-to-set-up-and-configure-an-openvpn-server-on-centos-8-es)
+    <a href="https://www.digitalocean.com/community/tutorials/how-to-set-up-and-configure-an-openvpn-server-on-centos-8-es">LINK</a>
